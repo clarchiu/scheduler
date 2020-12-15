@@ -47,36 +47,32 @@ export default function useApplicationData() {
     }
   };
 
-  const bookInterview = (id, interview) => {
+  const updateInterview = (method, id, increment, interview) => {
     const appointment = {
       ...state.appointments[id],
-      interview: { ...interview }
+      inteview: interview? { ...interview } : null
     };
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-    return axios.put(APPOINTMENTS_URL + id, { interview })
-      .then(() => {
-        updateSpots(id, -1);
-        setAppointments(appointments);
-      });
+    return axios({
+      method,
+      url: APPOINTMENTS_URL + id,
+      data: interview ? { interview } : null
+    })
+    .then(() => {
+      updateSpots(id, increment);
+      setAppointments(appointments);
+    });
+  }
+
+  const bookInterview = (id, interview) => {
+    return updateInterview("put", id, -1, interview);
   };
 
   const cancelInterview = (id) => {
-    const appointment = {
-      ...state.appointments[id],
-      interview: null,
-    };
-    const appointments = {
-      ...state.appointments,
-      [id]: appointment
-    };
-    return axios.delete(APPOINTMENTS_URL + id)
-      .then(() => {
-        updateSpots(id, 1);
-        setAppointments(appointments);
-      });
+    return updateInterview("delete", id, 1);
   };
 
   return {
