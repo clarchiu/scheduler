@@ -44,7 +44,6 @@ export default function Application() {
   const interviewers = getInterviewersForDay(state,day);
 
   const bookInterview = (id, interview) => {
-    console.log(id, interview);
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -53,9 +52,21 @@ export default function Application() {
       ...state.appointments,
       [id]: appointment
     };
+    return axios.put(APPOINTMENTS_URL + id, { interview })
+      .then(() => setAppointments(appointments))
+      .catch(err => console.log(err));
+  }
 
-    const url = APPOINTMENTS_URL + id;
-    return axios.put(url, { interview })
+  const cancelInterview = (id) => {
+    const appointment = {
+      ...state.appointments[id],
+      interview: null,
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: appointment
+    };
+    return axios.delete(APPOINTMENTS_URL + id)
       .then(() => setAppointments(appointments))
       .catch(err => console.log(err));
   }
@@ -71,6 +82,7 @@ export default function Application() {
         interview={interview}
         interviewers={interviewers}
         bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
       />
     );
   });
