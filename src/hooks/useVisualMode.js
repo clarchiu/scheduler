@@ -4,23 +4,22 @@ export default function useVisualMode(initial) {
   const [mode, setMode] = useState(initial);
   const [history, setHistory] = useState([initial]); 
 
+  const popHistory = () => setHistory(prev => [...prev.slice(0, prev.length - 1)]);
+
   const transition = (next, replace = false) => {
     if (replace) {
-      history.pop();
+      popHistory();
     }
     setMode(next);
-    history.push(next);
-    setHistory(history);
+    setHistory(prev => [...prev, next]);
   };
 
   const back = () => {
     if (history.length === 1) {
       return;
     }
-    history.pop();
-    setHistory(history);
-    setMode(history[history.length - 1]);
-
+    setMode(history[history.length - 2]);
+    popHistory();
   }
 
   return {
