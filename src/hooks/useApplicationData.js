@@ -45,7 +45,7 @@ export default function useApplicationData() {
         setDays(days);
       }
     }
-  }
+  };
 
   const bookInterview = (id, interview) => {
     const appointment = {
@@ -61,7 +61,7 @@ export default function useApplicationData() {
         updateSpots(id, -1);
         setAppointments(appointments);
       });
-  }
+  };
 
   const cancelInterview = (id) => {
     const appointment = {
@@ -77,7 +77,7 @@ export default function useApplicationData() {
         updateSpots(id, 1);
         setAppointments(appointments);
       });
-  }
+  };
 
   return {
     state,
