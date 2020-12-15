@@ -7,7 +7,8 @@ import Show from "./Show";
 import Empty from "./Empty";
 import Form from "./Form";
 import Status from "./Status";
-import Confirm from "./Confirm"
+import Confirm from "./Confirm";
+import Error from "./Error";
 
 const EMPTY = "EMPTY";
 const SHOW = "SHOW";
@@ -38,7 +39,7 @@ export default function Appointment(props) {
   };
 
   const destroy = () => {
-    transition(DELETING);
+    transition(DELETING, true);
     cancelInterview(id)
       .then(() => transition(EMPTY))
       .catch(() => transition(ERR_DELETE, true));

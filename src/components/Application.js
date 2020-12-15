@@ -36,7 +36,7 @@ export default function Application() {
         appointments: appointmentsRes.data,
         interviewers: interviewersRes.data,
       }));
-    })
+    });
   }, []);
 
   const { day, days } = state;
@@ -54,7 +54,6 @@ export default function Application() {
     };
     return axios.put(APPOINTMENTS_URL + id, { interview })
       .then(() => setAppointments(appointments))
-      .catch(err => console.log(err));
   }
 
   const cancelInterview = (id) => {
@@ -68,7 +67,6 @@ export default function Application() {
     };
     return axios.delete(APPOINTMENTS_URL + id)
       .then(() => setAppointments(appointments))
-      .catch(err => console.log(err));
   }
 
   const scheduleElements = schedule.map((appointment) => {
