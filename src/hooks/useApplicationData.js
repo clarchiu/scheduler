@@ -14,6 +14,7 @@ export default function useApplicationData() {
   });
 
   const setDay = day => setState({...state, day});
+  const setDays = days => setState(prev => ({...prev, days}));
   const setAppointments = appointments => setState(prev => ({...prev, appointments}));
 
   useEffect(() => {
@@ -32,6 +33,20 @@ export default function useApplicationData() {
     });
   }, []);
 
+  const updateSpots = (id, increment) => {
+    for (const [index, day] of state.days.entries()) {
+      if (day.appointments.includes(id)) {
+        const newDay = {
+          ...day,
+          spots: day.spots + increment,
+        };
+        const days = [...state.days];
+        days.splice(index, 1, newDay);
+        setDays(days);
+      }
+    }
+  }
+
   const bookInterview = (id, interview) => {
     const appointment = {
       ...state.appointments[id],
@@ -42,7 +57,10 @@ export default function useApplicationData() {
       [id]: appointment
     };
     return axios.put(APPOINTMENTS_URL + id, { interview })
-      .then(() => setAppointments(appointments))
+      .then(() => {
+        updateSpots(id, -1);
+        setAppointments(appointments);
+      });
   }
 
   const cancelInterview = (id) => {
@@ -55,7 +73,10 @@ export default function useApplicationData() {
       [id]: appointment
     };
     return axios.delete(APPOINTMENTS_URL + id)
-      .then(() => setAppointments(appointments))
+      .then(() => {
+        updateSpots(id, 1);
+        setAppointments(appointments);
+      });
   }
 
   return {
