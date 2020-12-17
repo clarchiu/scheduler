@@ -10,15 +10,8 @@ import Status from "./Status";
 import Confirm from "./Confirm";
 import Error from "./Error";
 
-const EMPTY = "EMPTY";
-const SHOW = "SHOW";
-const CREATE = "CREATE";
-const EDIT = "EDIT";
-const CONFIRM = "CONFIRM";
-const SAVING = "Saving";
-const DELETING = "Deleting";
-const ERR_SAVE = "ERR_SAVE";
-const ERR_DELETE = "ERR_DELETE";
+import { APPOINTMENT_STATES } from "../../constants";
+const { EMPTY, SHOW, CREATE, EDIT, CONFIRM, SAVING, DELETING, ERR_SAVE, ERR_DELETE } = APPOINTMENT_STATES;
 
 export default function Appointment(props) {
   const {id, time, interview, interviewers, bookInterview, cancelInterview} = props;

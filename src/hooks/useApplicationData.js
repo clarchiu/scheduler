@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const DAYS_URL = "/api/days/";
-const APPOINTMENTS_URL = "/api/appointments/";
-const INTERVIEWERS_URL = "/api/interviewers/"
+import { API_URLS as api } from "../constants";
 
 export default function useApplicationData() {
   const [state, setState] = useState({
@@ -19,9 +17,9 @@ export default function useApplicationData() {
 
   useEffect(() => {
     Promise.all([
-      Promise.resolve(axios.get(DAYS_URL)),
-      Promise.resolve(axios.get(APPOINTMENTS_URL)),
-      Promise.resolve(axios.get(INTERVIEWERS_URL)),
+      Promise.resolve(axios.get(api.days)),
+      Promise.resolve(axios.get(api.appointments)),
+      Promise.resolve(axios.get(api.interviewers)),
     ])
     .then(([daysRes, appointmentsRes, interviewersRes]) => {
       setState(prev => ({
@@ -58,7 +56,7 @@ export default function useApplicationData() {
     };
     return axios({
       method,
-      url: APPOINTMENTS_URL + id,
+      url: api.appointments + id,
       data: interview ? { interview } : null
     })
     .then(() => {
