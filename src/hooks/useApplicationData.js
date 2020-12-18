@@ -31,12 +31,13 @@ export default function useApplicationData() {
     });
   }, []);
 
-  const updateSpots = (id, increment) => {
+  const updateSpots = (id, booking, editing) => {
     for (const [index, day] of state.days.entries()) {
       if (day.appointments.includes(id)) {
         const newDay = {
           ...day,
-          spots: day.spots + increment,
+          spots: day.spots + (booking ? 
+                             (editing ? 0 : -1) : 1),
         };
         const days = [...state.days];
         days.splice(index, 1, newDay);
@@ -45,32 +46,37 @@ export default function useApplicationData() {
     }
   };
 
-  const updateInterview = (method, id, increment, interview) => {
+  const bookInterview = (id, interview) => {
+    const appointment = state.appointments[id];
+    const newAppointment = {
+      ...appointment,
+      interview: { ...interview },
+    };
+    const appointments = {
+      ...state.appointments,
+      [id]: newAppointment
+    };
+    return axios.put(api.appointments + id, { interview })
+    .then(() => {
+      updateSpots(id, true, appointment.interview != null);
+      setAppointments(appointments);
+    });
+  };
+
+  const cancelInterview = (id) => {
     const appointment = {
       ...state.appointments[id],
-      inteview: interview? { ...interview } : null
+      interview: null,
     };
     const appointments = {
       ...state.appointments,
       [id]: appointment
     };
-    return axios({
-      method,
-      url: api.appointments + id,
-      data: interview ? { interview } : null
-    })
+    return axios.delete(api.appointments + id)
     .then(() => {
-      updateSpots(id, increment);
+      updateSpots(id, false);
       setAppointments(appointments);
     });
-  }
-
-  const bookInterview = (id, interview) => {
-    return updateInterview("put", id, -1, interview);
-  };
-
-  const cancelInterview = (id) => {
-    return updateInterview("delete", id, 1);
   };
 
   return {
