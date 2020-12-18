@@ -58,7 +58,7 @@ export default function useApplicationData() {
     };
     return axios.put(api.appointments + id, { interview })
     .then(() => {
-      updateSpots(id, true, appointment.interview != null);
+      updateSpots(id, true, appointment.interview !== null);
       setAppointments(appointments);
     });
   };
